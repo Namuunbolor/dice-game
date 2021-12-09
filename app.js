@@ -1,3 +1,4 @@
+var isNewGame;
 var activePlayer, scores, roundScore;
 var diceDom = document.querySelector(".dice");
 
@@ -5,29 +6,39 @@ initGame();
 
 // Shoog shideh event listener
 document.querySelector(".btn-roll").addEventListener("click", function () {
-  diceNumber = Math.floor(Math.random() * 6) + 1;
-  diceDom.style.display = "block";
-  diceDom.src = "dice-" + diceNumber + ".png";
-  console.log(diceNumber);
-  if (diceNumber !== 1) {
-    roundScore = roundScore + diceNumber;
-    document.getElementById("current-" + activePlayer).textContent = roundScore;
+  if (isNewGame) {
+    diceNumber = Math.floor(Math.random() * 6) + 1;
+    diceDom.style.display = "block";
+    diceDom.src = "dice-" + diceNumber + ".png";
+    console.log(diceNumber);
+    if (diceNumber !== 1) {
+      roundScore = roundScore + diceNumber;
+      document.getElementById("current-" + activePlayer).textContent =
+        roundScore;
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Togloom duussan baina");
   }
 });
 
 document.querySelector(".btn-hold").addEventListener("click", function () {
-  scores[activePlayer] = scores[activePlayer] + roundScore;
-  document.getElementById("score-" + activePlayer).textContent =
-    scores[activePlayer];
-  if (scores[activePlayer] >= 100) {
-    document.getElementById("name-" + activePlayer).textContent = "WINNER!!!";
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.add("winner");
+  if (isNewGame) {
+    scores[activePlayer] = scores[activePlayer] + roundScore;
+    document.getElementById("score-" + activePlayer).textContent =
+      scores[activePlayer];
+    if (scores[activePlayer] >= 50) {
+      isNewGame = false;
+      document.getElementById("name-" + activePlayer).textContent = "WINNER!!!";
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.add("winner");
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Togloom duussan baina");
   }
 });
 
@@ -45,6 +56,7 @@ function switchToNextPlayer() {
 document.querySelector(".btn-new").addEventListener("click", initGame);
 
 function initGame() {
+  isNewGame = true;
   //Toglogchiin eeljiig hadgalah huvisagch
   activePlayer = 0;
   //Toglogchdiin tsugluulsan onoog hadgalah huvisagch
@@ -61,8 +73,8 @@ function initGame() {
   document.getElementById("current-0").textContent = "0";
   document.getElementById("current-1").textContent = "0";
 
-  document.getElementById(".name-0").textContent = "Player-1";
-  document.getElementById(".name-1").textContent = "Player-2";
+  document.getElementById("name-0").textContent = "Player-1";
+  document.getElementById("name-1").textContent = "Player-2";
 
   document.querySelector(".player-0-panel").classList.remove("winner");
   document.querySelector(".player-1-panel").classList.remove("winner");
